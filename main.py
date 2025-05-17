@@ -5,7 +5,7 @@ import streamlit as st
 from scipy import stats
 
 with st.sidebar:
-    with open("images/deepblue.svg", "r") as f:
+    with open("images/deepblue.svg") as f:
         image = f.read()
     st.image(image, use_container_width=False)
 
@@ -25,16 +25,12 @@ Inserisci i tuoi dati nel box sottostante.
 )
 
 # Text input
-user_input = st.text_area(
-    "Inserisci i dati:", height=200, placeholder="Esempio:\n10, A\n20, B\n15, A\n30, C"
-)
+user_input = st.text_area("Inserisci i dati:", height=200, placeholder="Esempio:\n10, A\n20, B\n15, A\n30, C")
 
 if user_input:
     try:
         # Convert string input to a DataFrame
-        data = pd.read_csv(
-            io.StringIO(user_input), header=None, names=["Valore", "Categoria"]
-        )
+        data = pd.read_csv(io.StringIO(user_input), header=None, names=["Valore", "Categoria"])
 
         # Check if data is valid
         if data.shape[1] != 2:
@@ -47,9 +43,7 @@ if user_input:
 
             # Statistiche di base
             st.subheader("Statistiche per Categoria")
-            statistiche = data.groupby("Categoria")["Valore"].agg(
-                ["count", "mean", "std", "min", "max"]
-            )
+            statistiche = data.groupby("Categoria")["Valore"].agg(["count", "mean", "std", "min", "max"])
             st.dataframe(statistiche)
 
             # Selezione delle categorie
@@ -78,12 +72,8 @@ if user_input:
 
             # A/B Test (solo se 2 gruppi)
             if len(categorie_scelte) == 2:
-                gruppo1 = dati_filtrati[data["Categoria"] == categorie_scelte[0]][
-                    "Valore"
-                ]
-                gruppo2 = dati_filtrati[data["Categoria"] == categorie_scelte[1]][
-                    "Valore"
-                ]
+                gruppo1 = dati_filtrati[data["Categoria"] == categorie_scelte[0]]["Valore"]
+                gruppo2 = dati_filtrati[data["Categoria"] == categorie_scelte[1]]["Valore"]
 
                 t_stat, p_val = stats.ttest_ind(gruppo1, gruppo2, equal_var=False)
 
@@ -94,16 +84,11 @@ if user_input:
                 if p_val < 0.05:
                     st.success("Differenza significativa tra i due gruppi (p < 0.05)")
                 else:
-                    st.info(
-                        "Nessuna differenza statisticamente significativa (p ≥ 0.05)"
-                    )
+                    st.info("Nessuna differenza statisticamente significativa (p ≥ 0.05)")
 
             # ANOVA (più di 2 gruppi)
             if len(categorie_scelte) > 2:
-                gruppi = [
-                    group["Valore"].values
-                    for _, group in dati_filtrati.groupby("Categoria")
-                ]
+                gruppi = [group["Valore"].values for _, group in dati_filtrati.groupby("Categoria")]
                 f_stat, p_val = stats.f_oneway(*gruppi)
 
                 st.markdown("**ANOVA (analisi della varianza):**")
@@ -111,9 +96,7 @@ if user_input:
                 st.write(f"p-value: `{p_val:.4f}`")
 
                 if p_val < 0.05:
-                    st.success(
-                        "Almeno un gruppo differisce significativamente dagli altri (p < 0.05)"
-                    )
+                    st.success("Almeno un gruppo differisce significativamente dagli altri (p < 0.05)")
                 else:
                     st.info("Nessuna differenza significativa tra i gruppi (p ≥ 0.05)")
 
