@@ -17,11 +17,6 @@ repos:
       - id: mixed-line-ending
         args: ['--fix=lf']
 
-  - repo: 'https://github.com/kynan/nbstripout'
-    rev: 0.8.1
-    hooks:
-      - id: nbstripout
-
   - repo: 'https://github.com/pycqa/isort'
     rev: 6.0.1
     hooks:
@@ -52,13 +47,6 @@ repos:
         args: ['--ignore=E402,E501,E731,F401,F403',
                 '--line-length=88',
         ]
-
-  - repo: 'https://github.com/pycqa/pydocstyle'
-    rev: 6.3.0
-    hooks:
-      - id: pydocstyle
-        args: ['--convention=google',
-                '--add-ignore=D100,D104,D200,D212']
 
   - repo: 'https://github.com/asottile/pyupgrade'
     rev: v3.19.1
