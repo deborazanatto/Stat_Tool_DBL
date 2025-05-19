@@ -67,17 +67,16 @@ if user_input:
 
                 # Distribution plots
                 st.subheader("📊 Distribution Plots")
-                for cat in categorie_scelte:
-                   valori = data["Valore"].dropna()
-                    if len(valori) < 5:
-                        st.warning("Not enough data to show a reliable distribution.")
-                    else:
-                         fig, ax = plt.subplots()
-                        sns.histplot(valori, kde=True, bins="auto", ax=ax)
-                        ax.set_title("Distribution of All Values")
-                        ax.set_xlabel("Valore")
-                        ax.set_ylabel("Frequency")
-                        st.pyplot(fig)
+                valori = data["Valore"].dropna()
+                if len(valori) < 5:
+                    st.warning("Not enough data to show a reliable distribution.")
+                else:
+                    fig, ax = plt.subplots()
+                    sns.histplot(valori, kde=True, bins="auto", ax=ax)
+                    ax.set_title("Distribution of All Values")
+                    ax.set_xlabel("Valore")
+                    ax.set_ylabel("Frequency")
+                    st.pyplot(fig)
 
                 # Shapiro-Wilk test
                 st.subheader("🔬 Normality Test (Shapiro-Wilk) on All Values")
