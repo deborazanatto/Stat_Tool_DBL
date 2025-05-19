@@ -68,22 +68,31 @@ if user_input:
                 # Distribution plots
                 st.subheader("📊 Distribution Plots")
                 for cat in categorie_scelte:
-                    subset = dati_filtrati[dati_filtrati["Categoria"] == cat]["Valore"]
-                    fig, ax = plt.subplots()
-                    sns.histplot(subset, kde=True, ax=ax)
-                    ax.set_title(f"Distribution for {cat}")
-                    st.pyplot(fig)
+                   valori = data["Valore"].dropna()
+                    if len(valori) < 5:
+                        st.warning("Not enough data to show a reliable distribution.")
+                    else:
+                         fig, ax = plt.subplots()
+                        sns.histplot(valori, kde=True, bins="auto", ax=ax)
+                        ax.set_title("Distribution of All Values")
+                        ax.set_xlabel("Valore")
+                        ax.set_ylabel("Frequency")
+                        st.pyplot(fig)
 
                 # Shapiro-Wilk test
-                st.subheader("🔬 Normality Test (Shapiro-Wilk)")
-                for cat in categorie_scelte:
-                    subset = dati_filtrati[dati_filtrati["Categoria"] == cat]["Valore"]
-                    stat, p = stats.shapiro(subset)
-                    st.write(f"**{cat}** → W = `{stat:.4f}`, p = `{p:.4f}`")
+                st.subheader("🔬 Normality Test (Shapiro-Wilk) on All Values")
+
+                valori = data["Valore"].dropna()
+                if len(valori) < 3:
+                    st.warning("Not enough data to perform normality test.")
+                else:
+                    stat, p = stats.shapiro(valori)
+                    st.write(f"W = `{stat:.4f}`, p = `{p:.4f}`")
                     if p > 0.05:
                         st.success("Looks like a normal distribution (p > 0.05)")
                     else:
                         st.warning("Not normally distributed (p ≤ 0.05)")
+
 
             else:
                 st.info("Please select at least two categories from the sidebar.")
